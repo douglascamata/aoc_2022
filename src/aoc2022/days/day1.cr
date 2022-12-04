@@ -2,11 +2,11 @@ require "../day"
 
 module Aoc2022
   class Day1 < Day
-    def part1
+    def part1 : Int
       biggest_calories_sum(1)
     end
 
-    def part2
+    def part2 : Int
       biggest_calories_sum(3)
     end
 

@@ -49,7 +49,7 @@ module Aoc2022
       end
     end
 
-    def part1
+    def part1 : Int
       @input.split("\n").map(&.strip).map do |game_line|
         oponent, my = game_line.split(" ").map { |s| Shape.from(s) }
         play(my, oponent) + my.value
@@ -62,7 +62,7 @@ module Aoc2022
       return 0
     end
 
-    def part2
+    def part2 : Int
       @input.split("\n").map(&.strip).map do |game_line|
         raw_oponent, raw_command = game_line.split(" ")
         oponent = Shape.from(raw_oponent)

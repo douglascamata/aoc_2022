@@ -4,7 +4,7 @@ module Aoc2022
       @input = input_reader.read
     end
 
-    abstract def part1
-    abstract def part2
+    abstract def part1 : Int
+    abstract def part2 : Int
   end
 end

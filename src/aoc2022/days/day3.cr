@@ -52,14 +52,14 @@ module Aoc2022
       end
     end
 
-    def part1
+    def part1 : Int
       @input.split("\n").map(&.strip).map do |raw|
         rucksack = Rucksack.new(raw)
         rucksack.find_duplicate_item.priority
       end.sum
     end
 
-    def part2
+    def part2 : Int
       @input.split("\n").map(&.strip).in_groups_of(3, "").map do |raw_sacks|
         sacks = raw_sacks.map { |s| Rucksack.new(s) }
         group = Group.new(sacks)
