@@ -1,11 +1,14 @@
 require "./aoc2022/*"
 require "./time_span"
 
-# TODO: Write documentation for `Aoc2022`
 module Aoc2022
   extend self
 
   VERSION = "0.1.0"
+
+  def run_all
+    DAYS.keys.each { |d| run_day(d) }
+  end
 
   def run_day(day : Int32)
     runner = DAYS[day].new(FileInputReader.new(day))
