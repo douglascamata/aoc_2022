@@ -13,15 +13,15 @@ module Aoc2022
   def run_day(day : Int32)
     runner = DAYS[day].new(FileInputReader.new(day))
     part1, part2 = 0, 0
-    ellapsed_time = Time.measure do
+    part1_time = Time.measure do
       part1 = runner.part1
     end
-    ellapsed_time = Time.measure do
+    part2_time = Time.measure do
       part2 = runner.part2
     end
 
     puts "Day #{day}:\n"
-    puts "  Part 1: #{runner.part1} (took #{humanize_time_span(ellapsed_time)})."
-    puts "  Part 2: #{runner.part2} (took #{humanize_time_span(ellapsed_time)})."
+    puts "  Part 1: #{runner.part1} (took #{humanize_time_span(part1_time)})."
+    puts "  Part 2: #{runner.part2} (took #{humanize_time_span(part2_time)})."
   end
 end
