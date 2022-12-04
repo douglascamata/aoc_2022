@@ -1,27 +1,18 @@
 # aoc2022
 
-TODO: Write a description here
-
-## Installation
-
-TODO: Write installation instructions here
+These are my solutions to the [Advent of Code 2022](https://adventofcode.com/2022)
+using Crystal.
 
 ## Usage
 
-TODO: Write usage instructions here
+Run all solutions:
 
-## Development
+```sh
+crystal src/main.cr
+```
 
-TODO: Write development instructions here
+Run a given day:
 
-## Contributing
-
-1. Fork it (<https://github.com/your-github-user/aoc2022/fork>)
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create a new Pull Request
-
-## Contributors
-
-- [Douglas Camata](https://github.com/your-github-user) - creator and maintainer
+```sh
+crystal src/main.cr <DAY_NUMBER>
+```
