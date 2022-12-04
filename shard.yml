@@ -1,0 +1,13 @@
+name: aoc2022
+version: 0.1.0
+
+authors:
+  - Douglas Camata <159076+douglascamata@users.noreply.github.com>
+
+targets:
+  aoc2022:
+    main: src/main.cr
+
+crystal: 1.6.2
+
+license: MIT
