@@ -45,4 +45,20 @@ describe Aoc2022::Day3 do
       day3.part2.should eq(70)
     end
   end
+
+  context "Given real input" do
+    subject = Aoc2022::Day3.new(Aoc2022::FileInputReader.new(3))
+
+    describe "#part1" do
+      it "gives correct result for my input", tags: "real" do
+        subject.part1.should eq(7674)
+      end
+    end
+
+    describe "#part2" do
+      it "gives correct result for my input", tags: "real" do
+        subject.part2.should eq(2805)
+      end
+    end
+  end
 end
