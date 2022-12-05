@@ -6,5 +6,6 @@ module Aoc2022
     2 => Aoc2022::Day2,
     3 => Aoc2022::Day3,
     4 => Aoc2022::Day4,
+    5 => Aoc2022::Day5,
   }
 end
