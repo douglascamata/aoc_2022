@@ -21,17 +21,17 @@ describe Aoc2022::Day1 do
         10000
       INPUT
     )
-    day1 = Aoc2022::Day1.new(input)
+    subject = Aoc2022::Day1.new(input)
 
     describe "#part1" do
       it "returns the elf carrying more calories" do
-        day1.part1.should eq 24000
+        subject.part1.should eq 24000
       end
     end
 
     describe "#part2" do
       it "returns the sum of the top 3 calories carriers" do
-        day1.part2.should eq 45000
+        subject.part2.should eq 45000
       end
     end
   end

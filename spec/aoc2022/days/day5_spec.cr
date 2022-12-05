@@ -16,17 +16,17 @@ describe Aoc2022::Day5 do
       move 1 from 1 to 2
       INPUT
     )
-    day5 = Aoc2022::Day5.new(input)
+    subject = Aoc2022::Day5.new(input)
 
     describe "#part1" do
       it "moves according to rules" do
-        day5.part1.should eq("CMZ")
+        subject.part1.should eq("CMZ")
       end
     end
 
     describe "#part2" do
       it "moves according to rules" do
-        day5.part2.should eq("MCD")
+        subject.part2.should eq("MCD")
       end
     end
   end

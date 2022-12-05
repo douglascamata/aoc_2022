@@ -13,23 +13,23 @@ describe Aoc2022::Day4 do
         2-6,4-8
       INPUT
     )
-    day4 = Aoc2022::Day4.new(input)
+    subject = Aoc2022::Day4.new(input)
 
     describe "#part1" do
       it "counts how many pairs have 1 complete intersection" do
-        day4.part1.should eq(2)
+        subject.part1.should eq(2)
       end
     end
 
     describe "#scan_range" do
       it "converts raw ranges into range objects" do
-        day4.range_into_set("1-4").should eq(Set{1, 2, 3, 4})
+        subject.range_into_set("1-4").should eq(Set{1, 2, 3, 4})
       end
     end
 
     describe "#part2" do
       it "counts how many pair have some overlap" do
-        day4.part2.should eq(4)
+        subject.part2.should eq(4)
       end
     end
   end

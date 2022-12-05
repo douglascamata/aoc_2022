@@ -13,11 +13,11 @@ describe Aoc2022::Day3 do
         CrZsJsPPZsGzwwsLwLmpwMDw
       INPUT
     )
-    day3 = Aoc2022::Day3.new(input)
+    subject = Aoc2022::Day3.new(input)
 
     describe "#part1" do
       it "sums the priorities of all sacks" do
-        day3.part1.should eq(157)
+        subject.part1.should eq(157)
       end
 
       describe Aoc2022::Day3::Item do
@@ -42,7 +42,7 @@ describe Aoc2022::Day3 do
     end
 
     describe "#part2" do
-      day3.part2.should eq(70)
+      subject.part2.should eq(70)
     end
   end
 
