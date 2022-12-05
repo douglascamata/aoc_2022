@@ -7,7 +7,11 @@ module Aoc2022
   VERSION = "0.1.0"
 
   def run_all
-    DAYS.keys.each { |d| run_day(d) }
+    total = 0
+    total = Time.measure do
+      DAYS.keys.each { |d| run_day(d) }
+    end
+    puts "Took #{humanize_time_span(total)} in total."
   end
 
   def run_day(day : Int32)
