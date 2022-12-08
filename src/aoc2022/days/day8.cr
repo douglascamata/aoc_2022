@@ -10,23 +10,13 @@ module Aoc2022
       visible_count = 0
       florest.each_with_index do |line, i|
         line.each_with_index do |tree, j|
-          if i.zero? || j.zero?
+          if on_edge(florest, i, j)
             visible_count += 1
             next
           end
-          if i == line.size - 1 || j == florest.size - 1
-            visible_count += 1
-            next
-          end
-
-          found = false
-          Direction.each do |direction|
-            if visible(florest, i, j, direction)
-              found = true
-              break
-            end
-          end
-          visible_count += 1 if found
+          Direction.values.find do |direction|
+            visible(florest, i, j, direction)
+          end.try { visible_count += 1 }
         end
       end
       visible_count
@@ -61,13 +51,7 @@ module Aoc2022
         line_right(florest, i, j),
       ]
       lines.map do |line|
-        los_end = line.index { |tree| tree >= subject }
-        case los_end
-        when Nil
-          los_end = line.size
-        else
-          los_end += 1
-        end
+        line.index { |tree| tree >= subject }.try { |i| i + 1 } || line.size
       end.product
     end
 
@@ -94,35 +78,35 @@ module Aoc2022
     end
 
     private def line_left(florest, i, j) : Array(Int32)
-      result = Array(Int32).new
-      (j - 1).downto(0) do |next_j|
-        result.push(florest[i][next_j])
+      Array(Int32).new.tap do |result|
+        (j - 1).downto(0) do |next_j|
+          result.push(florest[i][next_j])
+        end
       end
-      result
     end
 
     private def line_right(florest, i, j) : Array(Int32)
-      result = Array(Int32).new
-      (j + 1).upto(florest.size - 1) do |next_j|
-        result.push(florest[i][next_j])
+      Array(Int32).new.tap do |result|
+        (j + 1).upto(florest.size - 1) do |next_j|
+          result.push(florest[i][next_j])
+        end
       end
-      result
     end
 
     private def line_above(florest, i, j) : Array(Int32)
-      result = Array(Int32).new
-      (i - 1).downto(0) do |next_i|
-        result.push(florest[next_i][j])
+      Array(Int32).new.tap do |result|
+        (i - 1).downto(0) do |next_i|
+          result.push(florest[next_i][j])
+        end
       end
-      result
     end
 
     private def line_below(florest, i, j) : Array(Int32)
-      result = Array(Int32).new
-      (i + 1).upto(florest.size - 1) do |next_i|
-        result.push(florest[next_i][j])
+      Array(Int32).new.tap do |result|
+        (i + 1).upto(florest.size - 1) do |next_i|
+          result.push(florest[next_i][j])
+        end
       end
-      result
     end
   end
 end
