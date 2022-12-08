@@ -3,9 +3,8 @@ require "../day"
 module Aoc2022
   class Day7 < Day
     def part1(debug = false)
-      groups = @input.split("$ ").reject(&.empty?).map(&.strip)
-      groups.delete_at(0)
-      tree = Node.new("/")
+      groups = @input.split("$ ").reject(&.empty?).map(&.strip)[1..]
+      tree = Dir.new("/")
       process_groups(tree, groups)
       tree.print if debug
       tree.recurse_folders_sizes.tap { |r| puts r if debug }.select do |folder, size|
@@ -16,9 +15,8 @@ module Aoc2022
     def part2(debug = false)
       total_disk_available = 70000000
       disk_for_update = 30000000
-      groups = @input.split("$ ").reject(&.empty?).map(&.strip)
-      groups.delete_at(0)
-      tree = Node.new("/")
+      groups = @input.split("$ ").reject(&.empty?).map(&.strip)[1..]
+      tree = Dir.new("/")
       process_groups(tree, groups)
       tree.print if debug
       sizes = tree.recurse_folders_sizes
@@ -28,19 +26,19 @@ module Aoc2022
       end.map { |folder, size| size }.sort.first
     end
 
-    private def process_groups(node : Node, groups : Array(String))
+    private def process_groups(node : Dir, groups : Array(String))
       return if groups.size.zero?
       group = groups.delete_at(0)
-      command, *output_lines = group.split("\n")
+      command, *output = group.split("\n")
       case command
       when "ls"
-        output_lines.each do |line|
+        output.each do |line|
           dir_or_size, name = line.split(" ")
           case dir_or_size
           when "dir"
-            node.add_child(Node.new(name))
+            node.add_child(Dir.new(name))
           else
-            node.add_child(Node.new(name, dir_or_size.to_i))
+            node.add_child(File.new(name, dir_or_size.to_i))
           end
         end
         process_groups(node, groups)
@@ -48,71 +46,71 @@ module Aoc2022
         subdir = command.split(" ")[1]
         raise "No subdir" if subdir.nil?
 
-        if subdir == ".."
-          parent = node.parent
-          case parent
+        if subdir == ".." # switch back to parent
+          case parent = node.parent
+          when Dir
+            return process_groups(parent, groups)
           when Nil
             raise "No parent for #{node.name}." if node.parent.nil?
-          when Node
-            return process_groups(parent, groups)
           end
         end
 
-        subdir_node = node[subdir]
-        raise "Didn't see subdir node: #{subdir}" if subdir_node.nil?
-        process_groups(subdir_node, groups)
+        case subdir_node = node[subdir]
+        when Dir
+          process_groups(subdir_node, groups)
+        else
+          raise "Can only process folders."
+        end
       end
     end
 
-    class Node
-      @children : Array(self)
+    class File
       @parent : self | Nil
-      @type : Symbol
-      getter name, children, size
+      getter name, size
       property parent, fullname
 
-      def initialize(@name : String)
-        @children = Array(self).new
-        @size = 0
-        @type = :dir
-        @fullname = @name
-      end
-
       def initialize(@name : String, @size : Int32)
-        @children = Array(self).new
-        @type = :file
         @fullname = @name
       end
 
-      def add_child(child : self)
+      def print(index : Int32 = 0)
+        index.times { print "  " }
+        puts "- #{@name} (file, size=#{@size})"
+      end
+    end
+
+    class Dir < File
+      @children : Array(Dir | File)
+      getter children
+
+      def initialize(@name : String)
+        @children = Array(Dir | File).new
+        @size = 0
+        @fullname = @name
+      end
+
+      def add_child(child : Dir | File)
         child.parent = self
         child.fullname = "#{@fullname}/#{child.name}"
         @children.push(child)
       end
 
-      def print(index : Int32 = 0)
-        index.times { print "  " }
-        puts "- #{@name} (#{dir_or_size})"
-        @children.each do |child|
-          if child.dir?
-            child.print(index + 1)
-          else
-            (index + 1).times { print "  " }
-            puts "- #{child.name} (file, size=#{child.size})"
-          end
-        end
+      def dir?
+        true
       end
 
-      private def dir_or_size
-        return "dir" if dir?
-        "#{@size}"
+      def print(index : Int32 = 0)
+        index.times { print "  " }
+        puts "- #{@name} (dir)"
+        @children.each(&.print(index + 1))
       end
 
       def recurse_folders_sizes : Hash(String, Int32)
         result = Hash(String, Int32).new
         size = 0
         @children.each do |child|
-          if child.dir?
+          case child
+          when Dir
             child_size = child.recurse_folders_sizes
             result.merge!(child_size)
             size += child_size[child.fullname]
@@ -124,15 +122,7 @@ module Aoc2022
         result
       end
 
-      def dir?
-        @type == :dir
-      end
-
-      def file?
-        !dir
-      end
-
-      def [](name : String)
+      def [](name : String) : Dir | File
         result = @children.find { |c| c.name == name }
         case result
         when Nil
