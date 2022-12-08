@@ -25,7 +25,7 @@ module Aoc2022
     end
 
     puts "Day #{day}:\n"
-    puts "  Part 1: #{runner.part1} (took #{humanize_time_span(part1_time)})."
-    puts "  Part 2: #{runner.part2} (took #{humanize_time_span(part2_time)})."
+    puts "  Part 1: #{part1} (took #{humanize_time_span(part1_time)})."
+    puts "  Part 2: #{part2} (took #{humanize_time_span(part2_time)})."
   end
 end
