@@ -16,3 +16,11 @@ Run a given day:
 ```sh
 crystal src/main.cr <DAY_NUMBER>
 ```
+
+### Scaffold files for a given day
+
+It will create the implementation class, its spec, and an empty input file.
+
+```sh
+crystal day_gen.cr <DAY_NUMBER>
+```
