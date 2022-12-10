@@ -41,7 +41,7 @@ module Aoc2022
 
       def move_head(dir : Direction, count : Int32)
         count.times do
-          @rope[0] = move_point(@rope[0], dir)
+          @rope[0] = move_point_towards(@rope[0], dir)
           1.upto(@rope.size - 1) do |i|
             process_move(@rope[i - 1], @rope[i]).try do |new_position|
               @rope[i] = new_position
@@ -54,51 +54,42 @@ module Aoc2022
       end
 
       private def process_move(moving : Point, previous : Point) : Point?
-        new_position : Point? = nil
-        move_vector = {moving[0] - previous[0], moving[1] - previous[1]}
-        distance = move_vector.map(&.abs).sum
-        case {move_vector[0], move_vector[1]}
-        when {2, 0}
-          new_position = move_point(previous, Direction::R)
-        when {-2, 0}
-          new_position = move_point(previous, Direction::L)
-        when {0, 2}
-          new_position = move_point(previous, Direction::U)
-        when {0, -2}
-          new_position = move_point(previous, Direction::D)
+        case {moving[0] - previous[0], moving[1] - previous[1]}
         when {2, 2}
-          new_position = {previous[0] + 1, previous[1] + 1}
+          move_point_towards(previous, Direction::R, Direction::U)
         when {-2, 2}
-          new_position = {previous[0] - 1, previous[1] + 1}
+          move_point_towards(previous, Direction::L, Direction::U)
         when {2, -2}
-          new_position = {previous[0] + 1, previous[1] - 1}
+          move_point_towards(previous, Direction::R, Direction::D)
         when {-2, -2}
-          new_position = {previous[0] - 1, previous[1] - 1}
-        when {2, 1}, {2, -1}
-          new_position = move_point(moving, Direction::L)
-        when {-2, 1}, {-2, -1}
-          new_position = move_point(moving, Direction::R)
-        when {1, 2}, {-1, 2}
-          new_position = move_point(moving, Direction::D)
-        when {1, -2}, {-1, -2}
-          new_position = move_point(moving, Direction::U)
+          move_point_towards(previous, Direction::L, Direction::D)
+        when {2, 1}, {2, -1}, {2, 0}
+          move_point_towards(moving, Direction::L)
+        when {-2, 1}, {-2, -1}, {-2, 0}
+          move_point_towards(moving, Direction::R)
+        when {1, 2}, {-1, 2}, {0, 2}
+          move_point_towards(moving, Direction::D)
+        when {1, -2}, {-1, -2}, {0, -2}
+          move_point_towards(moving, Direction::U)
         end
-        new_position
       end
 
-      private def move_point(point : Point, dir : Direction) : Point
-        case dir
-        when Direction::U
-          {point[0], point[1] + 1}
-        when Direction::D
-          {point[0], point[1] - 1}
-        when Direction::R
-          {point[0] + 1, point[1]}
-        when Direction::L
-          {point[0] - 1, point[1]}
-        else
-          raise "Unknown direction"
+      private def move_point_towards(point : Point, *dirs : Direction) : Point
+        dirs.each do |dir|
+          point = case dir
+                  when Direction::U
+                    {point[0], point[1] + 1}
+                  when Direction::D
+                    {point[0], point[1] - 1}
+                  when Direction::R
+                    {point[0] + 1, point[1]}
+                  when Direction::L
+                    {point[0] - 1, point[1]}
+                  else
+                    raise "Unknown direction"
+                  end
         end
+        point
       end
     end
   end
