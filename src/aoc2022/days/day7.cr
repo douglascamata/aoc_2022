@@ -3,9 +3,9 @@ require "../day"
 module Aoc2022
   class Day7 < Day
     def part1(debug = false)
-      groups = @input.split("$ ").reject(&.empty?).map(&.strip)[1..]
+      command = @input.split("$ ").reject(&.empty?).map(&.strip)[1..]
       tree = Dir.new("/")
-      process_groups(tree, groups)
+      process_commands(tree, command)
       tree.print if debug
       tree.recurse_folders_sizes.tap { |r| puts r if debug }.select do |folder, size|
         size < 100000
@@ -15,9 +15,9 @@ module Aoc2022
     def part2(debug = false)
       total_disk_available = 70000000
       disk_for_update = 30000000
-      groups = @input.split("$ ").reject(&.empty?).map(&.strip)[1..]
+      command = @input.split("$ ").reject(&.empty?).map(&.strip)[1..]
       tree = Dir.new("/")
-      process_groups(tree, groups)
+      process_commands(tree, command)
       tree.print if debug
       sizes = tree.recurse_folders_sizes
       available_now = total_disk_available - sizes["/"]
@@ -26,10 +26,9 @@ module Aoc2022
       end.map { |folder, size| size }.sort.first
     end
 
-    private def process_groups(node : Dir, groups : Array(String))
-      return if groups.size.zero?
-      group = groups.delete_at(0)
-      command, *output = group.split("\n")
+    private def process_commands(node : Dir, commands : Array(String))
+      return if commands.size.zero?
+      command, *output = commands.delete_at(0).split("\n")
       case command
       when "ls"
         output.each do |line|
@@ -41,26 +40,20 @@ module Aoc2022
             node.add_child(File.new(name, dir_or_size.to_i))
           end
         end
-        process_groups(node, groups)
+        process_commands(node, commands)
       else # found "cd something"
         subdir = command.split(" ")[1]
         raise "No subdir" if subdir.nil?
 
         if subdir == ".." # switch back to parent
-          case parent = node.parent
-          when Dir
-            return process_groups(parent, groups)
-          when Nil
-            raise "No parent for #{node.name}." if node.parent.nil?
-          end
+          node.parent.try(&.as(Dir)).try do |parent|
+            return process_commands(parent, commands)
+          end || raise "No parent for #{node.name}."
         end
 
-        case subdir_node = node[subdir]
-        when Dir
-          process_groups(subdir_node, groups)
-        else
-          raise "Can only process folders."
-        end
+        node[subdir].try(&.as(Dir)).try do |subdir_node|
+          return process_commands(subdir_node, commands)
+        end || raise "Can only process folders."
       end
     end
 
@@ -85,8 +78,7 @@ module Aoc2022
 
       def initialize(@name : String)
         @children = Array(Dir | File).new
-        @size = 0
-        @fullname = @name
+        super(@name, 0)
       end
 
       def add_child(child : Dir | File)
@@ -123,13 +115,9 @@ module Aoc2022
       end
 
       def [](name : String) : Dir | File
-        result = @children.find { |c| c.name == name }
-        case result
-        when Nil
-          raise "Didn't find child #{name}"
-        else
-          result
-        end
+        @children.find { |c| c.name == name }.try do |c|
+          return c
+        end || raise "Didn't find child #{name}"
       end
     end
   end
