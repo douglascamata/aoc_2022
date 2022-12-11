@@ -2,17 +2,16 @@ require "../day"
 
 module Aoc2022
   class Day10 < Day
-    def part1
-      cpu = CPU.new
+    def part1(debug = false)
       interesting_cycles = [20, 60, 100, 140, 180, 220]
       result = 0
-      @input.split("\n").each do |instruction|
-        command, *args = instruction.split(" ")
-        cpu.process_instruction(command, args) do |cpu|
-          if cpu.cycle_counter.in?(interesting_cycles)
-            result += cpu.signal_strength
-          end
+      cpu = CPU.new(@input.split("\n"))
+      clock = Clock.new(cpu, debug)
+      clock.tick do
+        if clock.cycle_counter.in?(interesting_cycles)
+          result += cpu.x * clock.cycle_counter
         end
+        puts "Interesting cycle: x=#{cpu.x} cycle=#{clock.cycle_counter} loaded=#{cpu.work}" if debug
       end
       result
     end
@@ -20,35 +19,53 @@ module Aoc2022
     def part2
     end
 
-    class CPU
+    class Clock
       getter cycle_counter
 
-      def initialize(@x = 1)
-        @cycle_counter = 0
+      def initialize(@cpu : CPU)
+        @cycle_counter = 1
       end
 
-      def signal_strength
-        @x * @cycle_counter
-      end
-
-      def process_instruction(instruction : String, args : Array(String))
-        case instruction
-        when "noop"
-          tick
-          yield self
-        when "addx"
-          2.times do
-            tick
-            yield self
-          end
-          @x += args[0].to_i
-        else
-          raise "Unknown instruction: #{instruction}"
+      def tick
+        while @cpu.tick
+          @cycle_counter += 1
+          yield
         end
       end
+    end
 
-      private def tick
-        @cycle_counter += 1
+    class CPU
+      getter x
+      getter work
+      @instructions : Array(Array(String))
+      @work : Array(String)
+
+      def initialize(instructions : Array(String), @x = 1)
+        @instructions = instructions.map(&.split(" "))
+        @busy_cycles = 0
+        @work = [] of String
+      end
+
+      def tick : Bool
+        @work = @instructions.shift? || [] of String if @busy_cycles.zero?
+        return false if @work.nil?
+        return false if @work.empty?
+
+        case @work[0]
+        when "noop"
+          return true
+        when "addx"
+          if @busy_cycles == 1
+            arg = @work[1].to_i
+            @x += arg
+            @busy_cycles = 0
+          else
+            @busy_cycles += 1
+          end
+        else
+          raise "Unknown instruction: #{@work}"
+        end
+        true
       end
     end
   end
