@@ -21,9 +21,9 @@ module Aoc2022
 
     private def moving_window(container : Enumerable, window_size : Int32)
       container.map_with_index do |item, index|
-        break if container[index + window_size]?.nil?
-        window_elements = container[index, window_size]
-        yield window_elements
+        container[index, window_size]?.try do |window_elements|
+          yield window_elements
+        end
       end
     end
   end
