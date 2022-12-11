@@ -22,5 +22,5 @@ crystal src/main.cr <DAY_NUMBER>
 It will create the implementation class, its spec, and an empty input file.
 
 ```sh
-crystal day_gen.cr <DAY_NUMBER>
+crystal tools/day_gen.cr <DAY_NUMBER>
 ```
