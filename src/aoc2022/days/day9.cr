@@ -75,21 +75,20 @@ module Aoc2022
       end
 
       private def move_point_towards(point : Point, *dirs : Direction) : Point
-        dirs.each do |dir|
-          point = case dir
-                  when Direction::U
-                    {point[0], point[1] + 1}
-                  when Direction::D
-                    {point[0], point[1] - 1}
-                  when Direction::R
-                    {point[0] + 1, point[1]}
-                  when Direction::L
-                    {point[0] - 1, point[1]}
-                  else
-                    raise "Unknown direction"
-                  end
+        dirs.reduce(point) do |point, dir|
+          case dir
+          when Direction::U
+            {point[0], point[1] + 1}
+          when Direction::D
+            {point[0], point[1] - 1}
+          when Direction::R
+            {point[0] + 1, point[1]}
+          when Direction::L
+            {point[0] - 1, point[1]}
+          else
+            raise "Unknown direction"
+          end
         end
-        point
       end
     end
   end
