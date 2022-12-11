@@ -162,8 +162,17 @@ describe Aoc2022::Day10 do
     end
 
     describe "#part2" do
-      it "works" do
-        # subject.part2.should eq(true)
+      it "print the CRT correctly at the end" do
+        subject.part2.strip.should eq(
+          <<-INPUT.strip
+          ##..##..##..##..##..##..##..##..##..##..
+          ###...###...###...###...###...###...###.
+          ####....####....####....####....####....
+          #####.....#####.....#####.....#####.....
+          ######......######......######......####
+          #######.......#######.......#######.....
+          INPUT
+        )
       end
     end
   end
@@ -179,7 +188,16 @@ describe Aoc2022::Day10 do
 
     describe "#part2" do
       it "gives correct result for my input", tags: "real" do
-        # subject.part2.should eq(true)
+        subject.part2.strip.should eq(
+          <<-INPUT.strip
+          ####.#..#.###..#..#.####.###..#..#.#####
+          #....#.#..#..#.#..#.#....#..#.#..#....#.
+          ###..##...#..#.####.###..#..#.#..#...#..
+          #....#.#..###..#..#.#....###..#..#..#...
+          #....#.#..#.#..#..#.#....#....#..#.#...#
+          ####.#..#.#..#.#..#.####.#.....##..####.
+          INPUT
+        )
       end
     end
   end
