@@ -45,10 +45,11 @@ module Aoc2022
       state_lines.reverse.each do |line|
         0.upto(columns - 1) do |column|
           position = FIRST_CHAR_POS + (CHAR_DISTANCE * column)
-          entry = line[position]?
-          next if entry.nil? || entry == ' '
-          puts "Found #{entry} at #{position} for stack #{column}" if @debug
-          stacks[column].push(entry)
+          line[position]?.try do |entry|
+            next if entry == ' '
+            puts "Found #{entry} at #{position} for stack #{column}" if @debug
+            stacks[column].push(entry)
+          end
         end
       end
       puts stacks if @debug
