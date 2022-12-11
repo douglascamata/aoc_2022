@@ -57,9 +57,8 @@ module Aoc2022
       end
 
       def tick : Bool
-        @work = @instructions.shift? || [] of String if @busy_cycles.zero?
-        return false if @work.nil?
-        return false if @work.empty?
+        return false if @instructions.empty?
+        @work = @instructions.shift if @busy_cycles.zero?
 
         case @work[0]
         when "noop"
