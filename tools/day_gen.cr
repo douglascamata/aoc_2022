@@ -4,14 +4,14 @@ class DayTemplate
   def initialize(@number : Int32)
   end
 
-  ECR.def_to_s "templates/day.ecr"
+  ECR.def_to_s "tools/templates/day.ecr"
 end
 
 class DaySpecTemplate
   def initialize(@number : Int32)
   end
 
-  ECR.def_to_s "templates/day_spec.ecr"
+  ECR.def_to_s "tools/templates/day_spec.ecr"
 end
 
 def generate_day(number : Int32)
